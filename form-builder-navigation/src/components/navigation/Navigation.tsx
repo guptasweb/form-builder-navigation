@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { StrictModeDroppable } from './StrictModeDroppable';
-import AddPageButton from './AddPageButton';
-import MobileAddPageButton from './MobileAddPageButton';
+import { StrictModeDroppable } from '../ui/StrictModeDroppable';
+import AddPageButton from '../ui/AddPageButton';
+import MobileAddPageButton from '../ui/MobileAddPageButton';
 import DraggableNavItem from './DraggableNavItem';
 import DraggableMobileNavItem from './DraggableMobileNavItem';
-import InteractiveSeparator from './InteractiveSeparator';
+import InteractiveSeparator from '../ui/InteractiveSeparator';
 
 interface NavItemData {
   id: string;
@@ -20,8 +20,17 @@ export default function Navigation() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [navItems, setNavItems] = useState<NavItemData[]>([
     {
-      id: 'pages',
-      label: 'Pages',
+      id: 'info',
+      label: 'Info',
+      icon: (
+        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+        </svg>
+      )
+    },
+    {
+      id: 'details',
+      label: 'Details',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
@@ -29,17 +38,8 @@ export default function Navigation() {
       )
     },
     {
-      id: 'account',
-      label: 'Account',
-      icon: (
-        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-        </svg>
-      )
-    },
-    {
-      id: 'blocks',
-      label: 'Blocks',
+      id: 'other',
+      label: 'Other',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -47,11 +47,11 @@ export default function Navigation() {
       )
     },
     {
-      id: 'docs',
-      label: 'Docs',
+      id: 'ending',
+      label: 'Ending',
       icon: (
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5 9.293 8.207a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4a1 1 0 00-1.414-1.414L10.586 9.5z" clipRule="evenodd" />
         </svg>
       )
     }
@@ -126,14 +126,14 @@ export default function Navigation() {
           </div> */}
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4 relative">
+          <div className="hidden md:flex items-center relative">
             <DragDropContext onDragEnd={handleDragEnd}>
               <StrictModeDroppable droppableId="nav-items" direction="horizontal">
                 {(provided: any) => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="flex items-center space-x-4"
+                    className="flex items-center"
                   >
                     {navItems.map((item, index) => (
                       <React.Fragment key={item.id}>

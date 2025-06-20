@@ -29,14 +29,13 @@ export default function DraggableMobileNavItem({
           {...provided.draggableProps}
           className={snapshot.isDragging ? 'bg-white shadow-lg rounded-md' : ''}
         >
-          <div {...provided.dragHandleProps}>
-            <MobileNavItem 
-              label={item.label} 
-              onClick={() => onClick(`${item.id}-mobile`)}
-              hasMenu={true}
-              className={snapshot.isDragging ? 'bg-white' : ''}
-            />
-          </div>
+          <MobileNavItem 
+            label={item.label} 
+            onClick={() => onClick(`${item.id}-mobile`)}
+            hasMenu={true}
+            className={snapshot.isDragging ? 'bg-white' : ''}
+            dragHandleProps={provided.dragHandleProps}
+          />
           {activeDropdown === `${item.id}-mobile` && !snapshot.isDragging && (
             <div className="ml-4 mt-1 space-y-1">
               <button className="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Rename</button>

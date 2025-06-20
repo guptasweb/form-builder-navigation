@@ -8,9 +8,10 @@ interface MobileNavItemProps {
   className?: string;
   onClick?: () => void;
   hasMenu?: boolean;
+  dragHandleProps?: any; // For react-beautiful-dnd
 }
 
-export default function MobileNavItem({ href = "#", label, className = "", onClick, hasMenu = false }: MobileNavItemProps) {
+export default function MobileNavItem({ href = "#", label, className = "", onClick, hasMenu = false, dragHandleProps }: MobileNavItemProps) {
   const handleClick = (e: React.MouseEvent) => {
     if (onClick) {
       e.preventDefault();
@@ -22,7 +23,8 @@ export default function MobileNavItem({ href = "#", label, className = "", onCli
     <a
       href={href}
       onClick={handleClick}
-      className={`text-gray-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium flex items-center justify-between group ${className}`}
+      className={`text-gray-400 hover:text-gray-700 block px-3 py-2 rounded-md text-base font-medium flex items-center justify-between group hover:bg-gray-50 transition-all duration-300 ${className}`}
+      {...dragHandleProps}
     >
       {label}
       {hasMenu && (
