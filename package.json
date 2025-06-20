@@ -1,6 +1,6 @@
 {
-  "name": "fillout-page-navigation-nextjs",
-  "version": "0.1.0",
+  "name": "form-builder-navigation",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -33,5 +33,9 @@
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }
