@@ -1,3 +1,38 @@
+# Form Builder Navigation
+
+A React-based navigation component with drag-and-drop functionality, dual-state management, and context menus.
+
+## Navigation Features
+
+### Navigation States
+The navigation supports two distinct states for better user interaction:
+
+- **Focused State**: Visual selection when a nav item is clicked
+  - White background, black text, yellow icons, blue border
+  - Dropdown menu (3 dots) is hidden for clean appearance
+  
+- **Active State**: Functional activation when a nav item is double-clicked
+  - White background, black text, yellow icons, blue border  
+  - Dropdown menu (3 dots) is visible for access to context options
+
+### Interaction Behaviors
+
+- **Single Click**: Focuses/selects a navigation item (visual feedback)
+- **Double Click**: Activates a navigation item (functional state)
+- **Context Menu**: Right-click or click the 3-dot menu to access:
+  - Set as first page (moves item to top of navigation)
+  - Rename (edit item name)
+  - Copy (duplicate item properties)
+  - Duplicate (create identical item)
+  - Delete (remove item)
+
+### Drag & Drop
+- Drag navigation items to reorder them
+- Visual feedback during dragging
+- Automatic position updates
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

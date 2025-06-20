@@ -18,7 +18,6 @@ interface NavItemData {
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [activePage, setActivePage] = useState<string>('info');
   const [navItems, setNavItems] = useState<NavItemData[]>([
     {
       id: 'info',
@@ -57,6 +56,9 @@ export default function Navigation() {
       )
     }
   ]);
+  
+  const [activePage, setActivePage] = useState<string>(navItems[0]?.id || 'info');
+  const [focusedPage, setFocusedPage] = useState<string | null>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -64,18 +66,29 @@ export default function Navigation() {
 
   const handleNavItemClick = (itemName: string) => {
     setActiveDropdown(activeDropdown === itemName ? null : itemName);
-    console.log(`${itemName} menu toggled`);
   };
 
   const handlePageSelect = (pageId: string) => {
-    setActivePage(pageId);
+    setFocusedPage(pageId);
     setActiveDropdown(null);
-    console.log(`Selected page: ${pageId}`);
+  };
+
+  const handlePageActivate = (pageId: string) => {
+    setActivePage(pageId);
+    setFocusedPage(null); // Clear focused state when item becomes active
   };
 
   const handleContextMenuAction = (action: string, itemId: string) => {
-    console.log(`Context menu action: ${action} on item: ${itemId}`);
     switch (action) {
+      case 'setAsFirstPage':
+        // Move item to first position
+        const itemIndex = navItems.findIndex(item => item.id === itemId);
+        if (itemIndex > 0) {
+          const itemToMove = navItems[itemIndex];
+          const newItems = [itemToMove, ...navItems.filter(item => item.id !== itemId)];
+          setNavItems(newItems);
+        }
+        break;
       case 'rename':
         break;
       case 'copy':
@@ -99,7 +112,6 @@ export default function Navigation() {
       )
     };
     setNavItems([...navItems, newItem]);
-    console.log(`Added new page: ${newItem.label}`);
   };
 
   const handleAddPageAtPosition = (position: number) => {
@@ -116,7 +128,6 @@ export default function Navigation() {
     const newItems = [...navItems];
     newItems.splice(position + 1, 0, newItem);
     setNavItems(newItems);
-    console.log(`Added new page: ${newItem.label} at position ${position + 1}`);
   };
 
   const handleDragEnd = (result: DropResult) => {
@@ -130,21 +141,12 @@ export default function Navigation() {
 
     setNavItems(items);
     setActiveDropdown(null);
-    console.log(`Moved ${reorderedItem.label} from position ${result.source.index} to ${result.destination.index}`);
   };
 
   return (
     <nav className="bg-white shadow-lg fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo */}
-          {/* <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <h1 className="text-xl font-bold text-gray-800">
-                Galactic Alignment
-              </h1>
-            </div>
-          </div> */}
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center relative">
@@ -163,8 +165,10 @@ export default function Navigation() {
                           index={index}
                           onClick={handleNavItemClick}
                           onPageSelect={handlePageSelect}
+                          onPageActivate={handlePageActivate}
                           activeDropdown={activeDropdown}
                           activePage={activePage}
+                          focusedPage={focusedPage}
                           onContextMenuAction={handleContextMenuAction}
                         />
                         {index < navItems.length - 1 && (
@@ -184,16 +188,6 @@ export default function Navigation() {
             />
             <AddPageButton onClick={handleAddPage} />
           </div>
-
-          {/* Desktop Auth Buttons */}
-          {/* <div className="hidden md:flex items-center space-x-4">
-            <button className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Login
-            </button>
-            <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg">
-              Sign Up
-            </button>
-          </div> */}
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
@@ -231,8 +225,10 @@ export default function Navigation() {
                             index={index}
                             onClick={handleNavItemClick}
                             onPageSelect={handlePageSelect}
+                            onPageActivate={handlePageActivate}
                             activeDropdown={activeDropdown}
                             activePage={activePage}
+                            focusedPage={focusedPage}
                             onContextMenuAction={handleContextMenuAction}
                           />
                           {index < navItems.length - 1 && (
@@ -255,16 +251,6 @@ export default function Navigation() {
                 />
               </div>
               <MobileAddPageButton onClick={handleAddPage} />
-              <div className="pt-4 pb-3 border-t border-gray-200">
-                <div className="space-y-2">
-                  <button className="w-full text-left text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-                    Log In
-                  </button>
-                  <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-3 py-2 rounded-md text-base font-medium">
-                    Sign Up
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         )}
