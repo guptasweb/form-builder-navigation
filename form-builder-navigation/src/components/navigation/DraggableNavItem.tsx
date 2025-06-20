@@ -13,7 +13,9 @@ interface DraggableNavItemProps {
   };
   index: number;
   onClick: (itemId: string) => void;
+  onPageSelect: (pageId: string) => void;
   activeDropdown: string | null;
+  activePage: string;
   onContextMenuAction?: (action: string, itemId: string) => void;
 }
 
@@ -21,11 +23,17 @@ export default function DraggableNavItem({
   item, 
   index, 
   onClick, 
+  onPageSelect,
   activeDropdown,
+  activePage,
   onContextMenuAction
 }: DraggableNavItemProps) {
   const handleContextAction = (action: string) => {
     onContextMenuAction?.(action, item.id);
+  };
+
+  const handleNavItemClick = () => {
+    onPageSelect(item.id);
   };
 
   return (
@@ -39,8 +47,10 @@ export default function DraggableNavItem({
           <NavItem
             icon={item.icon}
             label={item.label}
+            onClick={handleNavItemClick}
             onDropdownClick={() => onClick(item.id)}
             hasMenu={true}
+            isActive={activePage === item.id}
             className={snapshot.isDragging ? 'shadow-lg bg-white' : ''}
             dragHandleProps={provided.dragHandleProps}
           />

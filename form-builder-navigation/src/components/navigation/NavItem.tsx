@@ -10,6 +10,7 @@ interface NavItemProps {
   onClick?: () => void;
   onDropdownClick?: () => void;
   hasMenu?: boolean;
+  isActive?: boolean;
   type?: 'link' | 'button' | 'auto';
   dragHandleProps?: any; // For react-beautiful-dnd
 }
@@ -22,10 +23,18 @@ export default function NavItem({
   onClick, 
   onDropdownClick,
   hasMenu = false,
+  isActive = false,
   type = 'auto', // Auto-detect based on props
   dragHandleProps
 }: NavItemProps) {
-  const baseClasses = "text-gray-400 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 flex items-center gap-2 bg-gray-100 hover:bg-gray-50 hover:shadow-sm group";
+  const baseClasses = "px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:shadow-sm group";
+  
+  // Active state styling
+  const activeClasses = isActive 
+    ? "bg-blue-100 text-blue-700 border-2 border-blue-300" 
+    : "text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-50";
+  
+  const combinedClasses = `${baseClasses} ${activeClasses} ${className}`;
   
   // Auto-detect type: if href is provided and no onClick, it's a link
   const isLink = href && !onClick;
@@ -50,15 +59,19 @@ export default function NavItem({
     </button>
   );
 
+  const iconClasses = isActive 
+    ? "text-blue-500" 
+    : "text-gray-400 group-hover:text-yellow-500";
+
   // Render as link for navigation
   if (isLink) {
     return (
       <a
         href={href}
-        className={`${baseClasses} ${className}`}
+        className={combinedClasses}
         {...dragHandleProps}
       >
-        <span className="text-gray-400 group-hover:text-yellow-500 transition-colors duration-300">
+        <span className={`${iconClasses} transition-colors duration-300`}>
           {icon}
         </span>
         {label}
@@ -72,10 +85,10 @@ export default function NavItem({
     <button
       type="button"
       onClick={onClick}
-      className={`${baseClasses} ${className}`}
+      className={combinedClasses}
       {...dragHandleProps}
     >
-      <span className="text-gray-400 group-hover:text-yellow-500 transition-colors duration-300">
+      <span className={`${iconClasses} transition-colors duration-300`}>
         {icon}
       </span>
       {label}

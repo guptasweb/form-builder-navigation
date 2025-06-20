@@ -18,6 +18,7 @@ interface NavItemData {
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activePage, setActivePage] = useState<string>('info');
   const [navItems, setNavItems] = useState<NavItemData[]>([
     {
       id: 'info',
@@ -66,6 +67,26 @@ export default function Navigation() {
     console.log(`${itemName} menu toggled`);
   };
 
+  const handlePageSelect = (pageId: string) => {
+    setActivePage(pageId);
+    setActiveDropdown(null);
+    console.log(`Selected page: ${pageId}`);
+  };
+
+  const handleContextMenuAction = (action: string, itemId: string) => {
+    console.log(`Context menu action: ${action} on item: ${itemId}`);
+    switch (action) {
+      case 'rename':
+        break;
+      case 'copy':
+        break;
+      case 'duplicate':
+        break;
+      case 'delete':
+        break;
+    }
+  };
+
   const handleAddPage = () => {
     const newPageNumber = navItems.length + 1;
     const newItem: NavItemData = {
@@ -108,7 +129,7 @@ export default function Navigation() {
     items.splice(result.destination.index, 0, reorderedItem);
 
     setNavItems(items);
-    setActiveDropdown(null); // Close any open dropdowns when dragging
+    setActiveDropdown(null);
     console.log(`Moved ${reorderedItem.label} from position ${result.source.index} to ${result.destination.index}`);
   };
 
@@ -141,7 +162,10 @@ export default function Navigation() {
                           item={item}
                           index={index}
                           onClick={handleNavItemClick}
+                          onPageSelect={handlePageSelect}
                           activeDropdown={activeDropdown}
+                          activePage={activePage}
+                          onContextMenuAction={handleContextMenuAction}
                         />
                         {index < navItems.length - 1 && (
                           <InteractiveSeparator 
@@ -206,7 +230,10 @@ export default function Navigation() {
                             item={item}
                             index={index}
                             onClick={handleNavItemClick}
+                            onPageSelect={handlePageSelect}
                             activeDropdown={activeDropdown}
+                            activePage={activePage}
+                            onContextMenuAction={handleContextMenuAction}
                           />
                           {index < navItems.length - 1 && (
                             <div className="flex justify-center py-1">

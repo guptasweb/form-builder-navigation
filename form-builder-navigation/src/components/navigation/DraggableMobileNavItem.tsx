@@ -3,6 +3,7 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import MobileNavItem from './MobileNavItem';
+import { ContextMenu } from '../ui';
 
 interface DraggableMobileNavItemProps {
   item: {
@@ -12,17 +13,33 @@ interface DraggableMobileNavItemProps {
   };
   index: number;
   onClick: (itemId: string) => void;
+  onPageSelect: (pageId: string) => void;
   activeDropdown: string | null;
+  activePage: string;
+  onContextMenuAction?: (action: string, itemId: string) => void;
 }
 
 export default function DraggableMobileNavItem({ 
   item, 
   index, 
   onClick, 
-  activeDropdown 
+  onPageSelect,
+  activeDropdown,
+  activePage,
+  onContextMenuAction
 }: DraggableMobileNavItemProps) {
+  const handleContextAction = (action: string) => {
+    onContextMenuAction?.(action, item.id);
+  };
+
+  const handleNavItemClick = () => {
+    onPageSelect(item.id);
+  };
+
+  const mobileItemId = `${item.id}-mobile`;
+
   return (
-    <Draggable draggableId={`mobile-${item.id}`} index={index}>
+    <Draggable draggableId={mobileItemId} index={index}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
@@ -30,18 +47,23 @@ export default function DraggableMobileNavItem({
           className={snapshot.isDragging ? 'bg-white shadow-lg rounded-md' : ''}
         >
           <MobileNavItem 
+            icon={item.icon}
             label={item.label} 
-            onClick={() => onClick(`${item.id}-mobile`)}
+            onClick={handleNavItemClick}
+            onDropdownClick={() => onClick(mobileItemId)}
             hasMenu={true}
+            isActive={activePage === item.id}
             className={snapshot.isDragging ? 'bg-white' : ''}
             dragHandleProps={provided.dragHandleProps}
           />
-          {activeDropdown === `${item.id}-mobile` && !snapshot.isDragging && (
-            <div className="ml-4 mt-1 space-y-1">
-              <button className="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Rename</button>
-              <button className="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Copy</button>
-              <button className="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">Duplicate</button>
-              <button className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded">Delete</button>
+          {activeDropdown === mobileItemId && !snapshot.isDragging && (
+            <div className="ml-4 mt-1">
+              <ContextMenu
+                onRename={() => handleContextAction('rename')}
+                onCopy={() => handleContextAction('copy')}
+                onDuplicate={() => handleContextAction('duplicate')}
+                onDelete={() => handleContextAction('delete')}
+              />
             </div>
           )}
         </div>
